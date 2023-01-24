@@ -28,10 +28,10 @@ func (i BlogsRoutes) Setup() {
 	blogs := i.router.Gin.Group("/blog")
 	{
 		blogs.POST("/create", i.blogcontroller.CreateBlog)
-		blogs.POST("/get-all/:cursor", i.blogcontroller.GetAllBlogs)
-		blogs.POST("/get-one/:id", i.blogcontroller.GetOneBlog)
-		blogs.POST("/update", i.blogcontroller.UpdateBlogs)
-		blogs.POST("/delete/:id", i.blogcontroller.DeleteBlogs)
+		blogs.GET("/get-all/:cursor", i.blogcontroller.GetAllBlogs)
+		blogs.GET("/get-one/:id", i.blogcontroller.GetOneBlog)
+		blogs.PUT("/update/:id", i.blogcontroller.UpdateBlogs)
+		blogs.DELETE("/delete/:id", i.blogcontroller.DeleteBlogs)
 
 	}
 }
