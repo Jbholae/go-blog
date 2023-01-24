@@ -77,11 +77,18 @@ func (cc BlogsController) GetOneBlog(c *gin.Context) {
 }
 
 func (cc BlogsController) UpdateBlogs(c *gin.Context) {
+	id, _ := strconv.ParseInt(c.Param("id"), 10, 64)
 	blog := models.Blog{}
 
-	err := cc.blogService.UpdateBlogs(blog)
+	if err := c.ShouldBind(&blog); err != nil {
+		cc.logger.Zap.Error("Error [UpdateBlog] (ShouldBindJson) : ", err)
+		responses.ErrorJSON(c, http.StatusBadRequest, "failed to update blog")
+		return
+	}
 
-	if err != nil {
+	blog.ID = id
+
+	if err := cc.blogService.UpdateBlogs(blog); err != nil {
 		cc.logger.Zap.Error("Error updating blog", err.Error())
 		err := errors.InternalError.Wrap(err, "Failed to update Blog")
 		responses.HandleError(c, err)
