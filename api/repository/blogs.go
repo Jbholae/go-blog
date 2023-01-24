@@ -24,7 +24,7 @@ func (c BlogsReposiory) CreateBlog(Blogs models.Blog) error {
 
 func (c BlogsReposiory) GetAllBlogs(cursor string) ([]models.Blog, error) {
 	var blogs []models.Blog
-	queryBuilder := c.db.DB.Model(&models.Blog{}).Order("create_at desc").Find(&blogs).Limit(20)
+	queryBuilder := c.db.DB.Model(&models.Blog{}).Order("created_at desc").Find(&blogs).Limit(20)
 	if cursor != "" {
 		time, _ := time.Parse(time.RFC3339, cursor)
 		queryBuilder = queryBuilder.Where("created_at < ?", time)
@@ -39,11 +39,7 @@ func (c BlogsReposiory) GetOneBlog(blogId int64) (Blog models.Blog, err error) {
 func (c BlogsReposiory) UpdateBlogs(Blog models.Blog) error {
 	return c.db.DB.Model(&models.Blog{}).
 		Where("id = ?", Blog.ID).
-		Updates(map[string]interface{}{
-			"title":   Blog.Title,
-			"content": Blog.Content,
-			"author":  Blog.Author,
-		}).Error
+		Updates(&Blog).Error
 }
 
 func (c BlogsReposiory) DeleteBlogs(blogId int64) error {
